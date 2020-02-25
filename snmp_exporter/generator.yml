@@ -1,0 +1,12 @@
+---
+modules:
+  if_mib:
+    walk:
+      - ifTable
+    auth:
+      community: monitor
+  netgear:
+    walk:
+      - boxServicesTempSensorsTable
+    auth:
+      community: monitor
