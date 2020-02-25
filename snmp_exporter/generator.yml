@@ -1,12 +1,13 @@
 ---
 modules:
-  if_mib:
+  generic_network_device:
     walk:
       - ifTable
     auth:
       community: monitor
-  netgear:
+  netgear_switch:
     walk:
+      - ifTable
       - boxServicesTempSensorsTable
     auth:
       community: monitor

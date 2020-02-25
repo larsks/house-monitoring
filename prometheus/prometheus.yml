@@ -30,15 +30,13 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9090']
 
-  - job_name: 'snmp_if'
+  - job_name: 'router'
     static_configs:
       - targets:
           - 192.168.1.1
-          - 192.168.7.100
-          - 192.168.7.101
     metrics_path: /snmp
     params:
-      module: [if_mib]
+      module: [generic_network_device]
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
@@ -47,14 +45,15 @@ scrape_configs:
       - target_label: __address__
         replacement: 127.0.0.1:9116
 
-  - job_name: 'snmp_box'
+  - job_name: 'switch'
     static_configs:
       - targets:
           - 192.168.7.100
           - 192.168.7.101
     metrics_path: /snmp
     params:
-      module: [netgear]
+      module:
+        - netgear_switch
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
