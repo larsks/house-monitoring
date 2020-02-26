@@ -82,10 +82,9 @@ scrape_configs:
       - targets: ['localhost:8008']
     params:
       metric: ['ip_src_dst_bps']
-      key: ['ipsource','ipdestination']
-      label: ['src','dst']
+      key: ['ipsource', 'ipdestination']
+      label: ['src', 'dst']
       value: ['bytes']
       scale: ['8']
       minValue: ['1000']
       maxFlows: ['100']
-
