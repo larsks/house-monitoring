@@ -1,5 +1,20 @@
 #!/bin/bash
 
+container() {
+	cname=$1
+	shift
+
+	if podman container inspect "$cname" >& /dev/null; then
+		echo "Container $cname is already running"
+		return
+	fi
+
+	echo -n "Starting container $cname: "
+	podman container run \
+		--name "$cname" -d -l podname=Prom \
+		"$@"
+}
+
 podman pod inspect prom >& /dev/null ||
 podman pod create -n prom \
 	-p 127.0.0.1:3000:3000 \
@@ -9,27 +24,23 @@ podman pod create -n prom \
 	\
 	-p 6343:6343/udp
 
-podman container inspect prom-main >& /dev/null ||
-podman run -d --name prom-main \
+container prom-main \
 	--pod prom \
 	-v $PWD/prometheus:/etc/prometheus \
 	-v prom-data:/prometheus \
 	prom/prometheus
 
-podman container inspect prom-snmp >& /dev/null ||
-podman run -d --name prom-snmp \
+container prom-snmp \
 	--pod prom \
 	-v $PWD/snmp_exporter:/etc/snmp_exporter \
 	prom/snmp-exporter
 
-podman container inspect prom-grafana >& /dev/null ||
-podman run -d --name prom-grafana \
+container prom-grafana \
 	--pod prom \
 	-v $PWD/grafana:/etc/grafana/provisioning \
 	-v grafana-data:/var/lib/grafana \
 	grafana/grafana
 
-podman container inspect prom-sflow >& /dev/null ||
-podman run -d --name prom-sflow \
+container prom-sflow \
 	--pod prom \
 	sflow/prometheus -Dsnmp.ifname=yes
