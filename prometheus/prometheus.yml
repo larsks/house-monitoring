@@ -1,7 +1,8 @@
+---
 # my global config
 global:
   # Set the scrape interval to every 15 seconds. Default is every 1 minute.
-  scrape_interval:     15s
+  scrape_interval: 15s
   # Evaluate rules every 15 seconds. The default is every 1 minute.
   evaluation_interval: 15s
   # scrape_timeout is set to the global default (10s).
@@ -10,14 +11,14 @@ global:
 alerting:
   alertmanagers:
     - static_configs:
-      - targets:
-      # - alertmanager:9093
+        - targets:
+        #   - alertmanager:9093
 
 # Load rules once and periodically evaluate them according to the global
 # 'evaluation_interval'.
 rule_files:
-  # - "first_rules.yml"
-  # - "second_rules.yml"
+# - "first_rules.yml"
+# - "second_rules.yml"
 
 # A scrape configuration containing exactly one endpoint to scrape:
 # Here it's Prometheus itself.
@@ -61,3 +62,30 @@ scrape_configs:
         target_label: instance
       - target_label: __address__
         replacement: 127.0.0.1:9116
+
+  - job_name: 'hosts'
+    static_configs:
+      - targets:
+          - 192.168.1.200:9100
+
+  - job_name: 'sflow-rt-analyzer'
+    metrics_path: /prometheus/analyzer/txt
+    static_configs:
+      - targets: ['192.168.1.200:8008']
+  - job_name: 'sflow-rt-metrics'
+    metrics_path: /prometheus/metrics/ALL/ALL/txt
+    static_configs:
+      - targets: ['192.168.1.200:8008']
+  - job_name: 'sflow-rt-flow-src-dst-bps'
+    metrics_path: /app/prometheus/scripts/export.js/flows/ALL/txt
+    static_configs:
+      - targets: ['192.168.1.200:8008']
+    params:
+      metric: ['ip_src_dst_bps']
+      key: ['ipsource','ipdestination']
+      label: ['src','dst']
+      value: ['bytes']
+      scale: ['8']
+      minValue: ['1000']
+      maxFlows: ['100']
+
