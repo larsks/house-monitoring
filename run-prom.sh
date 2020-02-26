@@ -30,6 +30,6 @@ podman run -d --name prom-grafana \
 	grafana/grafana
 
 podman container inspect prom-sflow >& /dev/null ||
-podman run -d --name sflow \
+podman run -d --name prom-sflow \
 	--pod prom \
 	sflow/prometheus -Dsnmp.ifname=yes
