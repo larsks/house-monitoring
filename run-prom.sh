@@ -39,6 +39,7 @@ container prom-grafana \
 	--pod prom \
 	-v $PWD/grafana:/etc/grafana/provisioning \
 	-v grafana-data:/var/lib/grafana \
+	-e GF_INSTALL_PLUGINS=briangann-gauge-panel,grafana-piechart-panel \
 	grafana/grafana
 
 container prom-sflow \
