@@ -31,6 +31,20 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9090']
 
+  - job_name: 'dht'
+    scrape_interval: 30s
+    static_configs:
+      - targets:
+          - 192.168.1.200:8000
+    metrics_path: /metrics
+
+  - job_name: 'wifi'
+    scrape_interval: 2m
+    static_configs:
+      - targets:
+          - 192.168.1.200:8001
+    metrics_path: /metrics
+
   - job_name: 'router'
     static_configs:
       - targets:
