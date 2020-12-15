@@ -11,7 +11,8 @@ container() {
 
 	echo -n "Starting container $cname: "
 	podman container run \
-		--name "$cname" -d -l podname=Prom \
+		--pod prom \
+		--name "$cname" -d \
 		"$@"
 }
 
@@ -25,23 +26,19 @@ podman pod create -n prom \
 	-p 6343:6343/udp
 
 container prom-main \
-	--pod prom \
 	-v $PWD/prometheus:/etc/prometheus \
 	-v prom-data:/prometheus \
 	prom/prometheus
 
 container prom-snmp \
-	--pod prom \
 	-v $PWD/snmp_exporter:/etc/snmp_exporter \
 	prom/snmp-exporter
 
 container prom-grafana \
-	--pod prom \
 	-v $PWD/grafana:/etc/grafana/provisioning \
 	-v grafana-data:/var/lib/grafana \
 	-e GF_INSTALL_PLUGINS=briangann-gauge-panel,grafana-piechart-panel \
 	grafana/grafana
 
 container prom-sflow \
-	--pod prom \
 	sflow/prometheus -Dsnmp.ifname=yes
